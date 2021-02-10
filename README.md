@@ -1,5 +1,10 @@
 # Replicant Chatbot Challenge
 
+## Work
+- get GKE going
+- get github action deploying
+
+## Rest of the stuff
 Hello. If you're reading this, it means you've made it part way through Replicant's hiring process. Congratulations and welcome! This next bit should be fun. 🙂
 
 This repository contains a skeleton of a chatbot web app. The rest of this document describes how to run this skeleton. For your challenge, we are asking you to make certain changes to this code; the precise nature of the changes depends on the role that you're applying for. You should have received those details in a separate email; if not, reach out to your hiring manager for help.

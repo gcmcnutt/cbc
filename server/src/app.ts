@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import path from 'path';
 import WebSocket from 'ws';
+import StatsD from 'hot-shots';
 
 import startChatBot from './bot';
 
@@ -14,6 +15,8 @@ app.use(express.static(path.join(__dirname, "../../client/build")))
 // whose dev server takes ownership of all websocket connections on the port it's running on.
 // TODO: Get rid of CRA.
 
+const dogstatsd = new StatsD();
+
 const httpPort = Number(process.env.HTTP_PORT) || 4444;
 const wsPort = Number(process.env.WS_PORT) || 5555;
 const httpServer = http.createServer(app);
@@ -22,5 +25,6 @@ const wss = new WebSocket.Server(httpPort === wsPort ? { server: httpServer} : {
 wss.on('connection', startChatBot);
 
 httpServer.listen(httpPort, () => {
+  dogstatsd.increment('app.restart')
   console.log(`Listening on ports ${httpPort} (http) / ${wsPort} (ws)`)
 });

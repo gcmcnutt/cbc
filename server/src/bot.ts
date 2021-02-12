@@ -1,6 +1,7 @@
 import WebSocket from 'ws';
 
 import { createParser } from './parser';
+import { dogstatsd } from './ddservice';
 
 // Message definitions
 
@@ -27,6 +28,10 @@ type ClearReminderMessage = {
   id: number;
 };
 
+type CrashAppMessage = {
+  kind: "crash-app";
+};
+
 type UnknownMessage = {
   kind: "unknown";
 };
@@ -36,6 +41,7 @@ type Message = HelpMessage
              | ListRemindersMessage
              | ClearAllRemindersMessage
              | ClearReminderMessage
+             | CrashAppMessage
              | UnknownMessage;
 
 // Parsing
@@ -83,6 +89,12 @@ const parseMessage = createParser<Message>({
       ],
       func: ({ id }) => ({ kind: "clear-reminder", id: Number(id) }),
     },
+    {
+      regexps: [
+        /^(?:crash|kill|dos|nuke|abort|rud|wrong)$/i,
+      ],
+      func: () => ({ kind: "crash-app" }),
+    }
   ],
   fallback: { kind: "unknown" },
 });
@@ -187,6 +199,14 @@ function executeMessage(state: State, message: Message) {
     return `Ok, I will not remind you to ${reminder.text}.`;
   }
 
+  case "crash-app": {
+    // TODO: cheese alert, allowing statd do flush...
+    setTimeout(function() {
+      process.exit(1);
+    }, 1500);
+    return "Oh no.  Something is wrong...";
+  }
+
   case "unknown":
     return "I'm sorry, I don't understand what you mean.";
   }
@@ -207,6 +227,7 @@ export default (ws: WebSocket) => {
 
   ws.on('message', (rawMessage) => {
     const message = parseMessage(rawMessage.toString());
+    dogstatsd.increment('parse.message', { kind: message.kind });
     const reply = executeMessage(state, message);
     ws.send(reply);
   });

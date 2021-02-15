@@ -1,5 +1,3 @@
-import WebSocket from 'ws';
-
 import { createParser } from './parser';
 import { dogstatsd } from './ddservice';
 
@@ -119,7 +117,7 @@ type Reminder = {
 };
 
 type State = {
-  ws: WebSocket;
+  sessionId: string;
   reminders: Reminder[];
   nextId: number;
 };
@@ -136,17 +134,17 @@ function executeMessage(state: State, message: Message) {
         .replace(/\bmy\b/g, 'your')
         .replace(/\bme\b/g, 'you');
 
-      const id = state.nextId++;
+      // const id = state.nextId++;
 
       const date = new Date();
       date.setSeconds(date.getSeconds() + seconds);
 
-      const timeout = setTimeout(() => {
-        state.ws.send(`It is time to ${text}!`);
-        state.reminders = state.reminders.filter((r) => r.id !== id);
-      }, seconds * 1000);
+      // const timeout = setTimeout(() => {
+      //   state.ws.send(`It is time to ${text}!`);
+      //   state.reminders = state.reminders.filter((r) => r.id !== id);
+      // }, seconds * 1000);
 
-      state.reminders.push({ id, date, text, timeout });
+      // state.reminders.push({ id, date, text, timeout });
 
       const unit = seconds === 1 ? 'second' : 'seconds';
       return `Ok, I will remind you to ${text} in ${seconds} ${unit}.`;
@@ -204,7 +202,7 @@ function executeMessage(state: State, message: Message) {
     setTimeout(function() {
       process.exit(1);
     }, 1500);
-    return "Oh no.  Something is wrong...";
+    return "Oh no. Something is wron.@#%@#r>D";
   }
 
   case "unknown":
@@ -220,21 +218,25 @@ function clearAllReminders(state: State) {
   state.reminders = [];
 }
 
+export function handleMessage(userId: string, rawMessage: string): string {
+  const state: State = { nextId: 1, reminders: [], sessionId: "foo" };
+
+  const message = parseMessage(rawMessage);
+  dogstatsd.increment('parse.message', { kind: message.kind });
+  return executeMessage(state, message);
+};
+
 // Websocket wrapper
 
-export default (ws: WebSocket) => {
-  const state: State = { nextId: 1, reminders: [], ws };
-
-  ws.on('message', (rawMessage) => {
-    const message = parseMessage(rawMessage.toString());
-    dogstatsd.increment('parse.message', { kind: message.kind });
-    const reply = executeMessage(state, message);
-    ws.send(reply);
-  });
-
-  ws.on('close', () => {
-    clearAllReminders(state);
-  });
-
-  ws.send('Greetings, friend! Type <tt>help</tt> to get started.');
-};
+// export default (ws: WebSocket) => {
+//   const state: State = { nextId: 1, reminders: [], ws };
+//
+//   ws.on('message', (rawMessage) => {
+//   });
+//
+//   ws.on('close', () => {
+//     clearAllReminders(state);
+//   });
+//
+//   ws.send('Greetings, friend! Type <tt>help</tt> to get started.');
+// };

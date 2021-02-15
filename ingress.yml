@@ -1,0 +1,11 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: cbc
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: cbc
+    networking.gke.io/managed-certificates: cbc-certificate
+spec:
+  backend:
+    serviceName: cbc-service
+    servicePort: 80

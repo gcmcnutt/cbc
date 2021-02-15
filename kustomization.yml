@@ -17,3 +17,5 @@ kind: Kustomization
 resources:
   - deployment.yml
   - service.yml
+  - managedCert.yml
+  - ingress.yml

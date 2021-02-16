@@ -18,4 +18,4 @@ resources:
   - deployment.yml
   - service.yml
   - managedCert.yml
-  - ingress.yml
+#  - ingress.yml  TODO kustomize can patch this on the fly

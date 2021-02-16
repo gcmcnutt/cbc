@@ -85,7 +85,6 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |-
         ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-        ./kustomize edit set metadata/annotations/kubernetes.io\/ingress.global-static-ip-name cbcdev=cbc
         ./kustomize build . | kubectl apply -n prod -f -
         kubectl rollout status -n prod deployment/$DEPLOYMENT_NAME
         kubectl get services -n prod -o wide

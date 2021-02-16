@@ -1,3 +1,23 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: cbc-certificate
+  namespace: dev
+spec:
+  domains:
+    - cbcdev.accelero.com
+
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: cbc-certificate
+  namespace: prod
+spec:
+  domains:
+    - cbc.accelero.com
+
+---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:

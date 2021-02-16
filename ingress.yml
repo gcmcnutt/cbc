@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: cbc
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: cbc
+    kubernetes.io/ingress.global-static-ip-name: cbcdev
     networking.gke.io/managed-certificates: cbc-certificate
 spec:
   backend:

@@ -13,8 +13,10 @@
 name: Build and Deploy to GKE
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
+      - dev
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -71,9 +73,21 @@ jobs:
         chmod u+x ./kustomize
 
     # Deploy the Docker image to the GKE cluster
-    - name: Deploy
+    - name: Deploy to Dev
+      if: github.ref == 'refs/heads/dev'
       run: |-
         ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-        ./kustomize build . | kubectl apply -f -
-        kubectl rollout status deployment/$DEPLOYMENT_NAME
-        kubectl get services -o wide
+        ./kustomize build . | kubectl apply -n dev -f -
+        kubectl rollout status -n dev deployment/$DEPLOYMENT_NAME
+        kubectl get services -n dev -o wide
+
+    - name: Deploy to Prod
+      if: github.ref == 'refs/heads/main'
+      run: |-
+        ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+        ./kustomize edit set kubernetes.io/ingress.global-static-ip-name cbcdev=cbc
+        ./kustomize build . | kubectl apply -n prod -f -
+        kubectl rollout status -n prod deployment/$DEPLOYMENT_NAME
+        kubectl get services -n prod -o wide
+
+    # TODO we could put some cname stuff here for dns provider...

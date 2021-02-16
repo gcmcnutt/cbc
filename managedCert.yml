@@ -4,4 +4,5 @@ metadata:
   name: cbc-certificate
 spec:
   domains:
+    - cbcdev.accelero.com
     - cbc.accelero.com

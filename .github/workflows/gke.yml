@@ -77,7 +77,7 @@ jobs:
       if: github.ref == 'refs/heads/dev'
       run: |-
         ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-        ./kustomize build . | kubectl apply -f -n dev -
+        ./kustomize build . | kubectl apply -n dev -f -
         kubectl rollout status -n dev deployment/$DEPLOYMENT_NAME
         kubectl get services -n dev -o wide
 
@@ -85,6 +85,9 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |-
         ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-        ./kustomize build . | kubectl apply -f -n prod -
+        ./kustomize edit set kubernetes.io/ingress.global-static-ip-name cbcdev=cbc
+        ./kustomize build . | kubectl apply -n prod -f -
         kubectl rollout status -n prod deployment/$DEPLOYMENT_NAME
         kubectl get services -n prod -o wide
+
+    # TODO we could put some cname stuff here for dns provider...

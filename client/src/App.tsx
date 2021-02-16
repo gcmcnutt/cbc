@@ -63,7 +63,7 @@ export default () => {
         <Grid container spacing={3}>
 
           <Grid item xs={12}>
-            <Typography variant="h5">Replicant Chatbot Challenge</Typography>
+            <Typography variant="h5">Replicant Chatbot Challenge ({process.env.APP_NAMESPACE})</Typography>
           </Grid>
 
           <Grid item xs={12}>

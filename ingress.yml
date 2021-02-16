@@ -5,6 +5,21 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: cbcdev
     networking.gke.io/managed-certificates: cbc-certificate
+  namespace: dev
+spec:
+  backend:
+    serviceName: cbc-service
+    servicePort: 80
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: cbc
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: cbc
+    networking.gke.io/managed-certificates: cbc-certificate
+  namespace: prod
 spec:
   backend:
     serviceName: cbc-service

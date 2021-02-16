@@ -63,11 +63,12 @@ export default () => {
         <Grid container spacing={3}>
 
           <Grid item xs={12}>
-            <Typography variant="h5">Replicant Chatbot Challenge ({process.env.REACT_APP_NAMESPACE})</Typography>
+            <Typography variant="h5">Replicant Chatbot Challenge</Typography>
           </Grid>
 
           <Grid item xs={12}>
             <form onSubmit={submit}>
+              
               <TextField
                 fullWidth
                 variant="outlined"

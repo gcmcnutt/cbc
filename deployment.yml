@@ -41,7 +41,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
-            - name: REACT_APP_NAMESPACE
+            - name: APP_NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace

@@ -5,6 +5,7 @@
 - maybe some logging too
 - consider shared state to re-establish sessions
 - migrate off of websockets to allow stateless
+- figure out the kustomize pattern for managed certs and fixed ips for ingress
 
 ## Stuff
 - gke

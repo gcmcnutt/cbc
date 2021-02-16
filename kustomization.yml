@@ -17,5 +17,5 @@ kind: Kustomization
 resources:
   - deployment.yml
   - service.yml
-  - managedCert.yml
-#  - ingress.yml  TODO kustomize can patch this on the fly
+#  - managedCert.yml TODO kustomize can patch this on the fly
+#  - ingress.yml TODO kustomize can patch this on the fly

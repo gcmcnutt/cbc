@@ -4,7 +4,7 @@
 - authentication
 - maybe some logging too
 - consider shared state to re-establish sessions
-- flip off of websockets to allow stateless
+- migrate off of websockets to allow stateless
 
 ## Stuff
 - gke
@@ -12,6 +12,7 @@
 - github CICD
 - dd metrics
 - app.restart alarms -> incident reporting
+- dev/prod envs
 
 ## Rest of the stuff
 Hello. If you're reading this, it means you've made it part way through Replicant's hiring process. Congratulations and welcome! This next bit should be fun. 🙂

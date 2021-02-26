@@ -236,5 +236,6 @@ export default (ws: WebSocket) => {
     clearAllReminders(state);
   });
 
+  dogstatsd.increment('session.start')
   ws.send('Greetings, friend! Type <tt>help</tt> to get started.');
 };
